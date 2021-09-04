@@ -3,10 +3,10 @@ package TierraMediaCod;
 import java.util.ArrayList;
 
 public class TierraMedia {
-	public static ArrayList<Promocion> promociones = new ArrayList<>();
-	public static ArrayList<Atraccion> atracciones = new ArrayList<>();
-	public static ArrayList<Usuario> usuarios = new ArrayList<>();
-	public static ArrayList<Sugerible> sugeribles = new ArrayList<>();
+	public static ArrayList<Promocion> promociones = new ArrayList<Promocion>();
+	public static ArrayList<Atraccion> atracciones = new ArrayList<Atraccion>();
+	public static ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+	public static ArrayList<Sugerible> sugeribles = new ArrayList<Sugerible>();
 
 	public static void main(String[] args) {
 		atracciones = obtenerAtraccionesAlmacenados();
@@ -15,21 +15,30 @@ public class TierraMedia {
 		imprimirAtraccionesPorConsola();
 		imprimirUsuariosPorConsola();
 		imprimirPromocionesPorConsola();
-		/*int i=1;
-		for (Usuario usuario: usuarios)
+		for (Usuario usuario: usuarios) 
+			ofertadorDeAtracciones(usuario);
+		
+
+
+	}
+
+	private static void ofertadorDeAtracciones(Usuario usuario) {
+		for (int i=1; i<20; i++)
+			System.out.println("-");
+			System.out.println("---------------------------------------------------------------------------------------------");
+			System.out.println("            OFERTADOR DE ATRACCIONES PARA EL USUARIO "+ usuario.getNombre());
+			System.out.println("---------------------------------------------------------------------------------------------");
 			for (Atraccion atraccion: atracciones) {
 				if (atraccion.ofrecer()){
 					usuario.agregarAtraccionAlItinerario(atraccion);
 				}
-			usuario.imprimirElItinerarioDiario();
 			}
-		*/
-
-
+			usuario.imprimirElItinerarioDiario();
+		
 	}
 	
 	private static void imprimirPromocionesPorConsola() {
-		for (int i=1; i<3; i++)
+		for (int i=1; i<20; i++)
 			System.out.println("-");
 		System.out.println("---------------------------------------------------------------------------------------------");
 		System.out.println("                                  LISTADO DE PROMOCIONES                                    -");
@@ -41,7 +50,7 @@ public class TierraMedia {
 	}
 
 	private static void imprimirUsuariosPorConsola() {
-		for (int i=1; i<3; i++)
+		for (int i=1; i<20; i++)
 			System.out.println("-");
 		System.out.println("---------------------------------------------------------------------------------------------");
 		System.out.println("                                  LISTADO DE USUARIOS                                       -");
@@ -51,7 +60,7 @@ public class TierraMedia {
 	}
 
 	private static void imprimirAtraccionesPorConsola() {
-		for (int i=1; i<3; i++)
+		for (int i=1; i<20; i++)
 			System.out.println("-");
 		System.out.println("---------------------------------------------------------------------------------------------");
 		System.out.println("-                               LISTADO DE ATRACCIONES                                      -");

@@ -1,6 +1,7 @@
 package TierraMediaCod;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Usuario {
 	private String nombre;
@@ -8,7 +9,7 @@ public class Usuario {
 	private double dinero;
 	private double tiempo;
 	private Posicion posicion;
-	private ArrayList<Atraccion> itinerarioDiario;
+	private ArrayList<Atraccion> itinerarioDiario = new ArrayList<Atraccion>() ;
 	
 	
 	public Usuario(String nombre, TipoDeAtraccion preferencia, double monedasDisponibles,
@@ -18,7 +19,6 @@ public class Usuario {
 		this.dinero = monedasDisponibles;
 		this.tiempo = horasDisponibles;
 		this.posicion  = posicion;
-		//inicializar el arraylist 
 	}
 	
 	public Usuario () {
@@ -55,8 +55,26 @@ public class Usuario {
 	}
 
 	public void imprimirElItinerarioDiario() {
-		System.out.println("-----------------FALTA HACER ES UN LISTADO NADA MAS----------------------");
+		double cantDinero= 0;
+		double cantTiempo = 0;
+		for (int i=1; i<100; i++)
+			System.out.println("-");
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println("   Su itinerario tiene: " + itinerarioDiario.size() + " atracciones"); 
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println("-                         LISTADO DE ATRACCIONES DEL ITINERARIO                             -");
 		
+		for(Atraccion atraccion: this.itinerarioDiario) {
+			atraccion.mostrarLaAtraccion();
+			cantDinero += atraccion.getPrecio();
+			cantTiempo += atraccion.getDuracion();
+		}
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.print(String.format("%-40s"," Tiene un costo de $" + cantDinero + " atracciones")); 
+		System.out.print(String.format("%-40s"," y una duracion de " + cantTiempo + " horas"));
+		System.out.println("");
+		System.out.println(" Gracias por si visita");
+		System.out.println("---------------------------------------------------------------------------------------------");
 	}
 
 
