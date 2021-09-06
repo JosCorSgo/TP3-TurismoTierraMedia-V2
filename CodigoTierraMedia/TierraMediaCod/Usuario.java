@@ -38,7 +38,7 @@ public class Usuario {
 
 
 	protected void mostrarElUsuario(){
-		System.out.println("---------------------------------------------------------------------------------------------");
+		//System.out.print(String.format("%-10s", " "+ orden + "- "));
 		System.out.print(String.format("%-25s", "Nombre: " + this.nombre));
 		System.out.print(String.format("%-30s", "Preferencia: " + this.preferencia));
 		System.out.print(String.format("%-15s", "Dinero: " + this.dinero));

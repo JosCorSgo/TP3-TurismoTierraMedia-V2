@@ -52,7 +52,7 @@ public class Atraccion extends Sugerible{
 	protected void mostrar() {
 		for (int i=1; i<2; i++)
 			System.out.println("-");
-		System.out.println("---------------------------------------------------------------------------------------------");
+		//System.out.println("---------------------------------------------------------------------------------------------");
 		System.out.println("");
 		System.out.print(String.format("%-50s", "Nombre de la atraccion: " + super.getNombre()));
 		System.out.println(String.format("%-10s", "Tipo: " + this.tipoAtraccion));

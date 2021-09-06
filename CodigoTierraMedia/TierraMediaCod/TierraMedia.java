@@ -2,6 +2,7 @@ package TierraMediaCod;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class TierraMedia {
 	public static ArrayList<Promocion> promociones = new ArrayList<Promocion>();
@@ -17,24 +18,93 @@ public class TierraMedia {
 		promociones = obtenerPromocionesAlmacenadas();
 		sugeribles = obtenerSugeribles();
 		Collections.sort(sugeribles);
-		 
-		//sugeribles.forEach(s -> System.out.println(s.getNombre() + "  " + s.getTipoSugerible()+ "  " + s.getPrecio()+ "  " + s.getDuracion()));
-		//imprimirAtraccionesPorConsola();
-		//imprimirUsuariosPorConsola();
-		//imprimirPromocionesPorConsola();
-		
-		//for (Usuario usuario: usuarios) {
-		
-		int i = 1;
-		sugeriblesDelUsuario =filtrarPreferidasYnoPreferidas(usuarios.get(i));
-		ofertadorDeAtracciones(usuarios.get(i));
-
-
+		menuPrincipal();
 	}
 
-	
-	
 	//  -----------------------------  metodos ----------------------------------------------------
+	
+	private static void menuPrincipal() {
+		Scanner entrada = new Scanner(System.in);
+		boolean seguir = true;
+		boolean acepta = false;
+		while (seguir) {
+		for (int i=1; i<50; i++)
+			System.out.println("-");
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println("                                    MENU PRINCIPAL                                           ");
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println(" SELECCIONE EL NUMERO DE OPCION                                                              ");
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println("");
+		System.out.println(" 1 - SELECCIONAR SUGERENCIAS DE ATRACCIONES PARA UN CLIENTE ");
+		System.out.println("");
+		System.out.println(" 2 - MOSTRAR LISTADO DE CLIENTES ");
+		System.out.println("");
+		System.out.println(" 3 - MOSTRAR LISTADO DE LAS ATRACCIONES");
+		System.out.println("");
+		System.out.println(" 4 - MOSTRAR LISTADO DE PROMOCIONES ");
+		System.out.println("");
+		System.out.println(" 5 - SALIR ");
+		System.out.println("");
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println(String.format(" INGRESE LA OPCION: "));
+		System.out.println("---------------------------------------------------------------------------------------------");
+
+			int opcion = entrada.nextInt();
+			switch (opcion){
+			case  1 : imprimirUsuariosPorConsola(); 
+					  System.out.println("---------------------------------------------------------------------------------------------");
+					  System.out.println("  INGRESE EL NRO DE ORDEN DEL CLIENTE PARA REALIZAR LAS SUGERENCIAS");
+					  System.out.println("---------------------------------------------------------------------------------------------");
+					  int e = entrada.nextInt();
+					  if (entradaValidaParaUsuarios(e))
+						  ofertadorDeUnUsuario(e);
+					  presioneCualquierTeclaParaSeguir();
+					  break;
+			case  2 : imprimirUsuariosPorConsola();
+					  presioneCualquierTeclaParaSeguir();
+			          break;
+			case  3 : imprimirAtraccionesPorConsola();
+					  presioneCualquierTeclaParaSeguir();
+					  break;
+			case  4 : imprimirPromocionesPorConsola(); 
+					  presioneCualquierTeclaParaSeguir();
+					  break;
+			case  5 : seguir = false; break;
+			}
+		}
+	}
+
+	private static boolean entradaValidaParaUsuarios(int e) {
+		if(e >= 1  &&  e <= usuarios.size()) {
+			return true;
+		} else {
+			System.out.println("Entrada fuera de rango ");
+			return false;
+		}
+	}
+	
+	private static boolean entradaValidaParaMenuPrincipal(int e) {
+		if(e >= 1  &&  e <= 5) {
+			return true;
+		} else {
+			System.out.println("Entrada fuera de rango ");
+			return false;
+		}
+	}
+
+	private static void presioneCualquierTeclaParaSeguir() {
+  		  Scanner entrada = new Scanner(System.in);
+		  System.out.println("---------------------------------------------------------------------------------------------");
+		  System.out.println("  PRESIONE CUALQUIER TECLA + ENTER PARA CONTINUAR");
+		  System.out.println("---------------------------------------------------------------------------------------------");
+		  String d = entrada.next();
+	}
+	
+	private static void ofertadorDeUnUsuario(int orden) {
+		sugeriblesDelUsuario =filtrarPreferidasYnoPreferidas(usuarios.get(orden - 1));
+		ofertadorDeAtracciones(usuarios.get(orden - 1));
+	}
 	
 	private static ArrayList<Sugerible> filtrarPreferidasYnoPreferidas(Usuario usuario) {
 		ArrayList<Sugerible> preferidas = new ArrayList<Sugerible>();
@@ -72,8 +142,6 @@ public class TierraMedia {
 			itinerario = null;
 		}
 	}
-
-
 
 	private static void encabezadoDelOfertador(Usuario usuario) {
 		for (int i=1; i<20; i++)
@@ -121,7 +189,8 @@ public class TierraMedia {
 	}
 
 	private static void imprimirPromocionesPorConsola() {
-		for (int i=1; i<20; i++)
+		Scanner entrada = new Scanner(System.in);
+		for (int i=1; i<5; i++)
 			System.out.println("-");
 		System.out.println("---------------------------------------------------------------------------------------------");
 		System.out.println("                                  LISTADO DE PROMOCIONES                                    -");
@@ -133,24 +202,28 @@ public class TierraMedia {
 	}
 
 	private static void imprimirUsuariosPorConsola() {
-		for (int i=1; i<20; i++)
+		int orden = 0;
+		for (int i=1; i<5; i++)
 			System.out.println("-");
 		System.out.println("---------------------------------------------------------------------------------------------");
 		System.out.println("                                  LISTADO DE USUARIOS                                       -");
 		System.out.println("---------------------------------------------------------------------------------------------");
-		for(Usuario usuario: usuarios) 
+		for(Usuario usuario: usuarios) {
+			orden++;
+			System.out.print(" "+ orden + " - ");
 			usuario.mostrarElUsuario();
+		}
 	}
 
 	private static void imprimirAtraccionesPorConsola() {
-		for (int i=1; i<20; i++)
+		Scanner entrada = new Scanner(System.in);
+		for (int i=1; i<5; i++)
 			System.out.println("-");
 		System.out.println("---------------------------------------------------------------------------------------------");
 		System.out.println("-                               LISTADO DE ATRACCIONES                                      -");
 		System.out.println("---------------------------------------------------------------------------------------------");		
 		for(Atraccion atraccion: atracciones) 
 			atraccion.mostrar();
-
 	}
 
 	private static ArrayList<Sugerible> obtenerSugeribles() {
