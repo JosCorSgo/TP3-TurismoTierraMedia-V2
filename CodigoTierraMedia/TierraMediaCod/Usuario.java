@@ -9,7 +9,7 @@ public class Usuario {
 	private double dinero;
 	private double tiempo;
 	private Posicion posicion;
-	private ArrayList<Atraccion> itinerarioDiario = new ArrayList<Atraccion>() ;
+	private ArrayList<Sugerible> itinerarioDiario = new ArrayList<Sugerible>() ;
 	
 	
 	public Usuario(String nombre, TipoDeAtraccion preferencia, double monedasDisponibles,
@@ -25,6 +25,18 @@ public class Usuario {
 		
 	}
 	
+	// ----------------------------------------  metodos -----------------------------------------------------------
+	
+	public boolean comproSugerible(Sugerible sugerible) {
+		return this.itinerarioDiario.contains(sugerible);
+	}
+
+	public void agregarSugeribleAlItinerario(Atraccion atraccion) {
+		itinerarioDiario.add(atraccion);
+	}
+
+
+
 	protected void mostrarElUsuario(){
 		System.out.println("---------------------------------------------------------------------------------------------");
 		System.out.print(String.format("%-25s", "Nombre: " + this.nombre));
@@ -33,6 +45,9 @@ public class Usuario {
 		System.out.println(String.format("%-15s", "Tiempo: " + this.tiempo));
 		System.out.println("---------------------------------------------------------------------------------------------");
 	}
+	
+
+	// ------------------------------- getters y setters -------------------------------------------------------
 
 	public String getNombre() {
 		return this.nombre;
@@ -49,35 +64,6 @@ public class Usuario {
 	public double getTiempo() {
 		return this.tiempo;
 	}
-
-	public void agregarAtraccionAlItinerario(Atraccion atraccion) {
-		itinerarioDiario.add(atraccion);
-	}
-
-	public void imprimirElItinerarioDiario() {
-		double cantDinero= 0;
-		double cantTiempo = 0;
-		for (int i=1; i<100; i++)
-			System.out.println("-");
-		System.out.println("---------------------------------------------------------------------------------------------");
-		System.out.println("   Su itinerario tiene: " + itinerarioDiario.size() + " atracciones"); 
-		System.out.println("---------------------------------------------------------------------------------------------");
-		System.out.println("-                         LISTADO DE ATRACCIONES DEL ITINERARIO                             -");
-		
-		for(Atraccion atraccion: this.itinerarioDiario) {
-			atraccion.mostrarLaAtraccion();
-			cantDinero += atraccion.getPrecio();
-			cantTiempo += atraccion.getDuracion();
-		}
-		System.out.println("---------------------------------------------------------------------------------------------");
-		System.out.print(String.format("%-40s"," Tiene un costo de $" + cantDinero + " atracciones")); 
-		System.out.print(String.format("%-40s"," y una duracion de " + cantTiempo + " horas"));
-		System.out.println("");
-		System.out.println(" Gracias por si visita");
-		System.out.println("---------------------------------------------------------------------------------------------");
-	}
-
-
 
 	
 	

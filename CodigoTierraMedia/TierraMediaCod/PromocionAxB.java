@@ -6,26 +6,37 @@ import java.util.Scanner;
 public class PromocionAxB extends Promocion{
 	private Atraccion atraccionBonificada;
 	
-	public PromocionAxB(String nombre, double precio, double duracion, ArrayList<Atraccion> atracciones,Atraccion atraccionBonificada, TipoDeAtraccion tipo) {
+	public PromocionAxB(String nombre, int precio, double duracion, ArrayList<Atraccion> atracciones,Atraccion atraccionBonificada, TipoDeAtraccion tipo) {
 		super(nombre, precio, duracion, tipo, atracciones);
 		this.atraccionBonificada = atraccionBonificada;
 	}
+	
+	// ---------------------- METODOS ---------------------------------------------
 
 	public boolean ofrecer(){
 		mostrarEncabezado();
-		super.mostrarLaPromocion();
-		this.atraccionBonificada.mostrarLaAtraccion();
+		super.mostrar();
+		this.atraccionBonificada.mostrar();
 		return super.pedirConfirmacion();
 	}
+	
+	public void agregarmeAlItinerario(Itinerario itinerario){
+		super.agregarmeAlItinerario(itinerario);
+		itinerario.agregarAtraccionAlItinerario(atraccionBonificada);
+		itinerario.setTiempoNecesario(itinerario.getTiempoNecesario() + super.getDuracion());
+		System.out.println("Se agrego una Promo AXB a su itinerario");
+	}
 
+	
 	public void mostrarEncabezado() {
 		System.out.println("---------------------------------------------------------------------------------------------");
 		System.out.println("-          ESTA PROMOCION BONIFICA LA ATRACCION: "+ this.atraccionBonificada.getNombre() );
 		System.out.println("---------------------------------------------------------------------------------------------");
 	}
 	
-	
-	
-	
-	
+	public boolean tieneCupo() {
+		boolean aux1 = super.tieneCupo();
+		boolean aux2 = this.atraccionBonificada.getCupo() <= 0;
+		return aux1 && aux2;
+	}
 }
