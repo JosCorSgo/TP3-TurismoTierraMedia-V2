@@ -25,7 +25,6 @@ public class Atraccion extends Sugerible{
 		itinerario.setCosto(itinerario.getCosto() + super.getPrecio());
 		itinerario.setTiempoNecesario(itinerario.getTiempoNecesario() + super.getDuracion());
 		itinerario.agregarAtraccionAlItinerario(this);	
-		System.out.println("Se agrego una Atraccion a su itinerario");
 	}
 	
 	public ArrayList<Atraccion> atraccionesQueContiene(){

@@ -1,5 +1,9 @@
 package TierraMediaCod;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,11 +13,11 @@ public class Usuario {
 	private double dinero;
 	private double tiempo;
 	private Posicion posicion;
-	private ArrayList<Sugerible> itinerarioDiario = new ArrayList<Sugerible>() ;
+	private ArrayList<Itinerario> itinerariosComprados = new ArrayList<Itinerario>() ;
 	
 	
 	public Usuario(String nombre, TipoDeAtraccion preferencia, double monedasDisponibles,
-					int horasDisponibles, Posicion posicion) {
+					double horasDisponibles, Posicion posicion) {
 		this.nombre = nombre;
 		this.preferencia = preferencia;
 		this.dinero = monedasDisponibles;
@@ -26,17 +30,16 @@ public class Usuario {
 	}
 	
 	// ----------------------------------------  metodos -----------------------------------------------------------
-	
-	public boolean comproSugerible(Sugerible sugerible) {
-		return this.itinerarioDiario.contains(sugerible);
-	}
-
+	/*
 	public void agregarSugeribleAlItinerario(Atraccion atraccion) {
 		itinerarioDiario.add(atraccion);
 	}
-
-
-
+	*/
+	
+	public boolean comproSugerible(Sugerible sugerible) {
+		return false; // this.itinerarioDiario.contains(sugerible);
+	}
+		
 	protected void mostrarElUsuario(){
 		//System.out.print(String.format("%-10s", " "+ orden + "- "));
 		System.out.print(String.format("%-25s", "Nombre: " + this.nombre));
@@ -46,7 +49,40 @@ public class Usuario {
 		System.out.println("---------------------------------------------------------------------------------------------");
 	}
 	
+	public void actualizarPorCompraDeAtraccion(Sugerible sugerible) {
+		this.dinero -= sugerible.getPrecio();
+		this.tiempo -= sugerible.getDuracion();
+	}
+	
 
+	public void grabarEnArchivo(String nombreArchivo){
+		try {
+			FileWriter archivo = new FileWriter(nombreArchivo, true);
+			PrintWriter salida = new PrintWriter(archivo);
+			salida.println(this.toString());
+			salida.close(); 
+			archivo.close();
+		} catch (IOException e) {
+				e.printStackTrace();
+		}
+	}
+
+
+	
+	@Override
+	public String toString() {
+		String cadena = "";
+		cadena = this.nombre + "," +
+				 this.preferencia + "," +
+				 this.dinero + "," +
+				 this.tiempo + "," +
+				 this.posicion.toString();		
+		return cadena;
+		
+	}
+	
+	
+	
 	// ------------------------------- getters y setters -------------------------------------------------------
 
 	public String getNombre() {

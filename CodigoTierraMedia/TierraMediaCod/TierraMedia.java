@@ -1,5 +1,13 @@
 package TierraMediaCod;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -18,6 +26,10 @@ public class TierraMedia {
 		promociones = obtenerPromocionesAlmacenadas();
 		sugeribles = obtenerSugeribles();
 		Collections.sort(sugeribles);
+		/*for(Usuario usuario: usuarios)
+			usuario.grabarEnArchivo("usuarios.txt");
+		*/
+		lectorUsuarios();
 		menuPrincipal();
 	}
 
@@ -28,28 +40,7 @@ public class TierraMedia {
 		boolean seguir = true;
 		boolean acepta = false;
 		while (seguir) {
-		for (int i=1; i<50; i++)
-			System.out.println("-");
-		System.out.println("---------------------------------------------------------------------------------------------");
-		System.out.println("                                    MENU PRINCIPAL                                           ");
-		System.out.println("---------------------------------------------------------------------------------------------");
-		System.out.println(" SELECCIONE EL NUMERO DE OPCION                                                              ");
-		System.out.println("---------------------------------------------------------------------------------------------");
-		System.out.println("");
-		System.out.println(" 1 - SELECCIONAR SUGERENCIAS DE ATRACCIONES PARA UN CLIENTE ");
-		System.out.println("");
-		System.out.println(" 2 - MOSTRAR LISTADO DE CLIENTES ");
-		System.out.println("");
-		System.out.println(" 3 - MOSTRAR LISTADO DE LAS ATRACCIONES");
-		System.out.println("");
-		System.out.println(" 4 - MOSTRAR LISTADO DE PROMOCIONES ");
-		System.out.println("");
-		System.out.println(" 5 - SALIR ");
-		System.out.println("");
-		System.out.println("---------------------------------------------------------------------------------------------");
-		System.out.println(String.format(" INGRESE LA OPCION: "));
-		System.out.println("---------------------------------------------------------------------------------------------");
-
+			interfazDelMenuPrincipal();
 			int opcion = entrada.nextInt();
 			switch (opcion){
 			case  1 : imprimirUsuariosPorConsola(); 
@@ -74,34 +65,34 @@ public class TierraMedia {
 			}
 		}
 	}
-
-	private static boolean entradaValidaParaUsuarios(int e) {
-		if(e >= 1  &&  e <= usuarios.size()) {
-			return true;
+	
+ 	private static void ofertadorDeAtracciones(Usuario usuario) {
+ 		Itinerario itinerario = new Itinerario(usuario.getNombre());
+		encabezadoDelOfertador(usuario);
+		imprimirSugeriblesDelUsuario();
+		boolean itinerarioCreado = false;
+		for (Sugerible sugerible: sugeriblesDelUsuario) {
+			if (sugerible.ofrecer()) {
+				itinerarioCreado = true;
+				sugerible.agregarmeAlItinerario(itinerario);
+				usuario.actualizarPorCompraDeAtraccion(sugerible);
+			}
+		}
+		if (itinerarioCreado) {
+			itinerario.imprimirElItinerario();
 		} else {
-			System.out.println("Entrada fuera de rango ");
-			return false;
+			itinerario = null;
 		}
 	}
-	
-	private static boolean entradaValidaParaMenuPrincipal(int e) {
-		if(e >= 1  &&  e <= 5) {
-			return true;
-		} else {
-			System.out.println("Entrada fuera de rango ");
-			return false;
-		}
+ 	
+	private static ArrayList<Sugerible> obtenerSugeribles() {
+		sugeribles.addAll(atracciones);
+		sugeribles.addAll(promociones);
+		return sugeribles;
 	}
 
-	private static void presioneCualquierTeclaParaSeguir() {
-  		  Scanner entrada = new Scanner(System.in);
-		  System.out.println("---------------------------------------------------------------------------------------------");
-		  System.out.println("  PRESIONE CUALQUIER TECLA + ENTER PARA CONTINUAR");
-		  System.out.println("---------------------------------------------------------------------------------------------");
-		  String d = entrada.next();
-	}
-	
 	private static void ofertadorDeUnUsuario(int orden) {
+		// -----------  while (!condicionDeSalida) {
 		sugeriblesDelUsuario =filtrarPreferidasYnoPreferidas(usuarios.get(orden - 1));
 		ofertadorDeAtracciones(usuarios.get(orden - 1));
 	}
@@ -124,23 +115,11 @@ public class TierraMedia {
 		return arrayAuxiliar;
 	}
 
- 	private static void ofertadorDeAtracciones(Usuario usuario) {
- 		Itinerario itinerario = new Itinerario(usuario.getNombre());
-		encabezadoDelOfertador(usuario);
-		imprimirSugeriblesDelUsuario();
-		boolean itinerarioCreado = false;
-		for (Sugerible sugerible: sugeriblesDelUsuario) {
-			if (sugerible.ofrecer()) {
-				itinerarioCreado = true;
-				sugerible.agregarmeAlItinerario(itinerario);
-			}
-		}
-
-		if (itinerarioCreado) {
-			itinerario.imprimirElItinerario();
-		} else {
-			itinerario = null;
-		}
+	private static boolean puedeComprar(Sugerible sugerible, Usuario usuario) {
+		return usuario.getDinero() >= sugerible.getPrecio()
+				&& usuario.getTiempo() >= sugerible.getDuracion()
+				&& !usuario.comproSugerible(sugerible)
+				&& sugerible.tieneCupo();
 	}
 
 	private static void encabezadoDelOfertador(Usuario usuario) {
@@ -153,12 +132,7 @@ public class TierraMedia {
 		System.out.println("---------------------------------------------------------------------------------------------");
 	}
 
-	private static boolean puedeComprar(Sugerible sugerible, Usuario usuario) {
-		return usuario.getDinero() >= sugerible.getPrecio()
-				&& usuario.getTiempo() >= sugerible.getDuracion()
-				&& !usuario.comproSugerible(sugerible)
-				&& sugerible.tieneCupo();
-	}
+
 	
 	private static void imprimirSugeriblesDelUsuario() {
 		System.out.print(String.format("%-30s", "Nombre de la atraccion"));
@@ -226,10 +200,55 @@ public class TierraMedia {
 			atraccion.mostrar();
 	}
 
-	private static ArrayList<Sugerible> obtenerSugeribles() {
-		sugeribles.addAll(atracciones);
-		sugeribles.addAll(promociones);
-		return sugeribles;
+	private static void interfazDelMenuPrincipal() {
+		for (int i=1; i<50; i++)
+			System.out.println("-");
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println("                                    MENU PRINCIPAL                                           ");
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println(" SELECCIONE EL NUMERO DE OPCION                                                              ");
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println("");
+		System.out.println(" 1 - SELECCIONAR SUGERENCIAS DE ATRACCIONES PARA UN CLIENTE ");
+		System.out.println("");
+		System.out.println(" 2 - MOSTRAR LISTADO DE CLIENTES ");
+		System.out.println("");
+		System.out.println(" 3 - MOSTRAR LISTADO DE LAS ATRACCIONES");
+		System.out.println("");
+		System.out.println(" 4 - MOSTRAR LISTADO DE PROMOCIONES ");
+		System.out.println("");
+		System.out.println(" 5 - SALIR ");
+		System.out.println("");
+		System.out.println("---------------------------------------------------------------------------------------------");
+		System.out.println(String.format(" INGRESE LA OPCION: "));
+		System.out.println("---------------------------------------------------------------------------------------------");
+	}
+	
+	private static boolean entradaValidaParaUsuarios(int e) {
+		if(e >= 1  &&  e <= usuarios.size()) {
+			return true;
+		} else {
+			System.out.println("Entrada fuera de rango ");
+			return false;
+		}
+	}
+	
+	private static boolean entradaValidaParaMenuPrincipal(int e) {
+		if(e >= 1  &&  e <= 5) {
+			return true;
+		} else {
+			System.out.println("Entrada fuera de rango ");
+			return false;
+		}
+	}
+	
+	
+	private static void presioneCualquierTeclaParaSeguir() {
+		  Scanner entrada = new Scanner(System.in);
+		  System.out.println("---------------------------------------------------------------------------------------------");
+		  System.out.println("  PRESIONE CUALQUIER TECLA + ENTER PARA CONTINUAR");
+		  System.out.println("---------------------------------------------------------------------------------------------");
+		  String d = entrada.next();
 	}
 	
 	private static ArrayList<Atraccion> obtenerAtraccionesAlmacenados() {
@@ -247,13 +266,15 @@ public class TierraMedia {
 
 	private static ArrayList<Usuario> obtenerUsuariosAlmacenados(){
 		// -----------------------------------  nombre   ,  tipo  ,        dinero , tiempo , posicion
-		TierraMedia.usuarios.add ( new Usuario ("Eowyn", TipoDeAtraccion.AVENTURA, 10, 8, new Posicion(1,2)));
+		/*TierraMedia.usuarios.add ( new Usuario ("Eowyn", TipoDeAtraccion.AVENTURA, 10, 8, new Posicion(1,2)));
 		TierraMedia.usuarios.add ( new Usuario ("Gandalf", TipoDeAtraccion.PAISAJES , 100, 100, new Posicion(1,2)));
 		TierraMedia.usuarios.add ( new Usuario ("Sam", TipoDeAtraccion.DEGUSTACION, 36, 8, new Posicion(1,2)));
 		TierraMedia.usuarios.add ( new Usuario ("Galadriel", TipoDeAtraccion.PAISAJES, 10, 8, new Posicion(1,2)));
 		TierraMedia.usuarios.add ( new Usuario ("Jose", TipoDeAtraccion.AVENTURA, 40, 10, new Posicion(1,2)));
 		TierraMedia.usuarios.add ( new Usuario ("Maria", TipoDeAtraccion.PAISAJES, 25, 10, new Posicion(1,2)));
 		TierraMedia.usuarios.add ( new Usuario ("Marta", TipoDeAtraccion.AVENTURA, 80, 22, new Posicion(1,2)));
+		*/
+		
 		return usuarios;
 	}
 	
@@ -273,6 +294,68 @@ public class TierraMedia {
 		TierraMedia.promociones.add ( new PromocionAxB ("Pack paisajes ", 10, 4.5, auxAtracciones3 ,bonificada,TipoDeAtraccion.PAISAJES ));
 		return promociones;
 	}
+	
+	
+	
+	/* LEE USUARIOS DE UN ARCHIVO TIPO TXT. EL FORMATO  GUARDADO DE LOS DATOS 
+	 * ESTA SEPARADO POR COMA Y CORRESPONDEN AN LOS SIGUIENTES ATRIBUTOS DE LA CLASE:
+	 * NOMBRE:String - PREFERENCIA:Enum - DINERO:Int - TIEMPO:Double - POSICION:(x,y): double
+	 */
+	public static void lectorUsuarios() {
+		String nombre = "";
+		TipoDeAtraccion preferencia= null; ;
+		double dinero = 0;
+		double tiempo = 0, x = 0, y = 0;
+		boolean error = false;
+		FileReader fr = null;
+		BufferedReader br = null;
+		try {
+			fr = new FileReader("usuarios.txt");
+			br = new BufferedReader(fr);
+			String linea;
+			while ((linea = br.readLine()) != null) {
+				String[] atributos = linea.split(",");
+				nombre = atributos[0];
+				try {
+					preferencia = TipoDeAtraccion.valueOf(atributos[1]);
+				} catch (Exception e1){
+					error = true;
+					System.out.println("Ocurrio un error en la carga del tipo de atraccion preferida");
+					e1.printStackTrace();
+				}	
+				try {
+					dinero = Double.parseDouble(atributos[2]);
+					tiempo = Double.parseDouble(atributos[3]);
+					x = Double.parseDouble(atributos[4]);
+					y = Double.parseDouble(atributos[5]);
+				} catch (NumberFormatException e2) {
+					error = true;
+					System.err.println("Uno de los datos leídos no es un double");
+				}
+				
+				if (!error) {
+					Usuario usuario = new Usuario(nombre,preferencia,dinero,tiempo, new Posicion(x, y));
+					usuarios.add(usuario);
+				}
+				else {
+					System.out.print("No se construyo el usuario porque alguno de los datos leidos no era valido");
+				}
+			}
+		} catch (IOException e3) {
+			e3.printStackTrace();
+		} finally {
+			try {
+				if (fr != null) {
+					fr.close();
+				}
+			} catch (Exception e4) {
+				e4.printStackTrace();
+			}
+		}
+	}
+		
+		
+	
 	
 
 }

@@ -1,10 +1,10 @@
 package TierraMediaCod;
 
 public class Posicion {
-	private int x;
-	private int y;
+	private double x;
+	private double y;
 	
-	public Posicion (int x, int y) {
+	public Posicion (double x, double y) {
 		this.x = x;
 		this.y = y;		
 	}
@@ -13,5 +13,10 @@ public class Posicion {
 		double distEjeX = pos2.x - this.x;
 		double distEjeY = pos2.y - this.y;
 		return Math.sqrt( Math.pow(distEjeX, 2) + Math.pow(distEjeY, 2));
+	}
+	
+	@Override
+	public String toString() {
+		return this.x + "," + this.y;
 	}
 }
