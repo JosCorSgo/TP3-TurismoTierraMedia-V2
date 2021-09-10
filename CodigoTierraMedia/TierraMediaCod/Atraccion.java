@@ -1,5 +1,8 @@
 package TierraMediaCod;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -82,4 +85,33 @@ public class Atraccion extends Sugerible{
 		
 		return acepta;
 	}
+	
+	public void grabarEnArchivo(String nombreArchivo){
+		try {
+			FileWriter archivo = new FileWriter(nombreArchivo, true);
+			PrintWriter salida = new PrintWriter(archivo);
+			salida.println(this.toString());
+			salida.close(); 
+			archivo.close();
+		} catch (IOException e) {
+				e.printStackTrace();
+		}
+	}
+	
+	
+	@Override
+	public String toString() {
+		// String nombre, int cupo, int precio, double duracion,TipoDeAtraccion tipo, Posicion posicion
+		String cadena = super.getNombre() + "," +
+						this.cupo  + "," +
+						super.getPrecio()  + "," +
+						super.getDuracion()  + "," +
+						this.tipoAtraccion  + "," +
+						this.posicion.toString();
+		return cadena;
+	}
+	
+	
+	
+	
 }

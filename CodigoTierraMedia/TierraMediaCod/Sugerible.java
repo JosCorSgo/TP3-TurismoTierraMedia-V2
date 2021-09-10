@@ -57,6 +57,7 @@ public abstract class Sugerible implements Comparable<Sugerible> {
 	public TipoDeAtraccion getTipoDeAtraccionIncluidas() {
 		return this.tipoDeAtraccionIncluidas;
 	}
+	
 
 	@Override
 	public int compareTo(Sugerible o) {

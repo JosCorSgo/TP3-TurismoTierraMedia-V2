@@ -1,5 +1,8 @@
 package TierraMediaCod;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -39,4 +42,34 @@ public class PromocionAxB extends Promocion{
 		boolean aux2 = this.atraccionBonificada.getCupo() <= 0;
 		return aux1 && aux2;
 	}
+	
+	
+	public void grabarEnArchivo(String nombreArchivo){
+		try {
+			FileWriter archivo = new FileWriter(nombreArchivo, true);
+			PrintWriter salida = new PrintWriter(archivo);
+			salida.println(this.toString());
+			salida.close(); 
+			archivo.close();
+		} catch (IOException e) {
+				e.printStackTrace();
+		}
+	}
+	
+	
+	@Override
+	public String toString() {
+		//String nombre, int precio, double duracion, ArrayList<Atraccion> atracciones,Atraccion atraccionBonificada, TipoDeAtraccion tipo 
+		String cadena = super.getNombre() + "," +
+						super.getPrecio()  + "," +
+						super.getDuracion()  + "," ;
+						for(Atraccion atraccion: super.getAtracionesPromocionadas())
+							cadena += atraccion.toString()+ ",";
+				cadena += this.atraccionBonificada + "," + super.getTipoDeAtraccionIncluidas();
+		return cadena;
+	}
+
+
+	
+	
 }
